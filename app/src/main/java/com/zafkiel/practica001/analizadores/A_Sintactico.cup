@@ -1,0 +1,289 @@
+package com.zafkiel.practica001.analizadores;
+import java_cup.runtime.Symbol;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+parser code
+{:
+    int contador = 0;
+    int contador2 = 0;
+    int contador3 = 0;
+    String resultadoActual = "";
+    String resultadoCadena = "";        
+    public static String instruccionesMark = "";
+    private static List<String> instruccionSintactica = new ArrayList<>();
+    public static List<String> getInstruccionSintactica() {
+        return instruccionSintactica;
+    }
+    private static List<String> sintacticos = new ArrayList<>();
+    public static List<String> getSintacticos() {
+        return sintacticos;
+    }
+    private static List<String> sintacticos2 = new ArrayList<>();
+    public static List<String> getSintacticos2() {
+        return sintacticos2;
+    }
+    private static List<String> sintacticosErrores = new ArrayList<>();
+    public static List<String> getSintacticosErrores() {
+        return sintacticosErrores;
+    }
+    private static List<String> sintacticosErrores2 = new ArrayList<>();
+    public static List<String> getSintacticosErrores2() {
+        return sintacticosErrores2;
+    }
+    private static HashMap<String, String> tablaSimbolos = new HashMap<>();
+    public static HashMap<String, String> getTablaSimbolos() {
+        return tablaSimbolos;
+    }
+    public void syntax_error(Symbol s){
+        String lexema = s.value.toString();
+        int fila = s.right;
+        int columna = s.left;
+        sintacticosErrores2.add("--->   ERROR SINTACTICO RECUPERADO!!!                   Lexema: "+lexema+"                   Linea:"+fila+"                   Columna: "+columna+"\n");
+    }
+    public void unrecovered_syntax_error(Symbol s){
+    String lexema = s.value.toString();
+    int fila = s.right;
+    int columna = s.left;
+    sintacticosErrores2.add  ("--->   ERROR SINTACTICO MODO PANICO!!!                   Lexema: "+lexema+"                   Linea:"+fila+"                   Columna: "+columna+"\n");
+}
+:}
+action code
+{:
+:}
+terminal MAS, MENOS, POR, DIV, POTENCIA, PARA, PARB, IGUAL, PUNTO, NUMERAL, COMA, REPORTESOPERADORES, REPORTEERRORES;
+terminal String HEADER, LISTA_ORDENADA, LISTA_NO_ORDENADA, TEXTO_ITALICA, TEXTO_NEGRITA, TEXTO_NEGRITA_ITALICA, PRINT, FORMAT, PLOT;
+terminal String ENTERO, DECIMAL, IDENTIFICADOR, CADENA, CARACTER;
+non terminal String INICIO, TEXTO, IMPRIMIR, TIPO_VARIABLE, EXPRESION, ASIGNACION_VARIABLE01, EXPRESIONES04, E;
+non terminal String  OPERACIONES_MATEMATICAS;
+non terminal String DECLARACION_VARIABLE_01, DECLARACION_VARIABLE_02, DECLARACION_VARIABLE_03, DECLARACION_VARIABLE_04, TIPO_DECLARACION_VARIABLE;
+precedence left POTENCIA;
+precedence left POR, DIV;
+precedence left MAS, MENOS; 
+precedence left PARA, PARB;
+start with INICIO;
+INICIO ::= TEXTO
+        ;
+//   |
+TEXTO ::= TEXTO IMPRIMIR
+| IMPRIMIR
+| TEXTO DECLARACION_VARIABLE_01
+| DECLARACION_VARIABLE_01
+| TEXTO FORMAT:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN FORMAT          Ocurrencia: "+a+"\n" );
+:}
+| FORMAT:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN FORMAT          Ocurrencia: "+a+"\n" );
+:}
+| TEXTO PLOT:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN PLOT          Ocurrencia: "+a+"\n" );
+:}
+| PLOT:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN PLOT          Ocurrencia: "+a+"\n" );
+:}
+| TEXTO LISTA_ORDENADA:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN LISTA ORDENADA          Ocurrencia: "+a+"\n" );
+:}
+| LISTA_ORDENADA:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN LISTA ORDENADA          Ocurrencia: "+a+"\n" );
+:}
+| TEXTO LISTA_NO_ORDENADA:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN LISTA NO ORDENADA          Ocurrencia: "+a+"\n" );
+:}
+| LISTA_NO_ORDENADA:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN LISTA NO ORDENADA          Ocurrencia: "+a+"\n" );
+:}
+| TEXTO TEXTO_ITALICA:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN ITALICA          Ocurrencia: "+a+"\n" );
+:}
+| TEXTO_ITALICA:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN ITALICA          Ocurrencia: "+a+"\n" );
+:}
+| TEXTO TEXTO_NEGRITA:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN NEGRITA          Ocurrencia: "+a+"\n" );
+:}
+| TEXTO_NEGRITA:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN NEGRITA          Ocurrencia: "+a+"\n" );
+:}
+| TEXTO TEXTO_NEGRITA_ITALICA:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN NEGRITA E ITALICA          Ocurrencia: "+a+"\n" );
+:}
+| TEXTO_NEGRITA_ITALICA:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: TEXTO EN NEGRITA E ITALICA          Ocurrencia: "+a+"\n" );
+:}
+| TEXTO HEADER:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: HEADER          Ocurrencia: "+a+"\n" );
+:}
+| HEADER:a {: 
+    contador++;
+    sintacticos.add(a);
+    instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: HEADER          Ocurrencia: "+a+"\n" );
+:}
+| TEXTO error {:  
+    sintacticosErrores.add("---> Contador: "+contador2+"          ERROR SINTÁCTICO en TEXTO: Se ignoró un error y se continúa con la siguiente instrucción.\n");  
+:}
+| error {:  
+    contador2++;
+    sintacticosErrores.add("---> Contador: "+contador2+"          ERROR SINTÁCTICO: Se detectó un error inesperado, pero el análisis continúa.\n");  
+:}
+;
+
+DECLARACION_VARIABLE_01 ::= IDENTIFICADOR IGUAL OPERACIONES_MATEMATICAS
+;
+
+IMPRIMIR ::= PRINT PARA CADENA:cad001 PARB {:
+contador++;
+sintacticos.add(cad001);
+instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: SE IMPRIMIO UNA INSTRUCCION          Ocurrencia: "+cad001+"\n" );
+:}
+| PRINT PARA OPERACIONES_MATEMATICAS:a PARB {:
+contador++;
+sintacticos.add(resultadoActual);
+instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: SE IMPRIMIO UNA OPERACION         Ocurrencia: "+resultadoActual+"\n" );
+:}
+| PRINT error {: contador2++; sintacticosErrores.add("---> Contador: "+contador2+"          ERROR dentro de PRINT, se ignoró un error.\n"); :}
+;
+
+
+
+
+OPERACIONES_MATEMATICAS ::= PARA OPERACIONES_MATEMATICAS PARB
+| MAS ENTERO:oper001 {: 
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION SUMA         Ocurrencia: + "+oper001+"\n" );
+instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: SE REALIZO UNA OPERACION SUMA         Ocurrencia: + "+oper001+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(oper001)); :}
+| MAS DECIMAL:oper001 {: 
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION SUMA         Ocurrencia: + "+oper001+"\n" );
+instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: SE REALIZO UNA OPERACION SUMA         Ocurrencia: + "+oper001+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(oper001)); :}
+| MENOS ENTERO:oper001 {: 
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION RESTA         Ocurrencia: - "+oper001+"\n" );
+instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: SE REALIZO UNA OPERACION RESTA         Ocurrencia: - "+oper001+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(oper001)*-1); :}
+| MENOS DECIMAL:oper001 {: 
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION RESTA         Ocurrencia: - "+oper001+"\n" );
+instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: SE REALIZO UNA OPERACION RESTA         Ocurrencia: - "+oper001+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(oper001)*-1); :}
+| ENTERO:oper001 {: 
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE DECLARO UN ENTERO         Ocurrencia: "+oper001+"\n" );
+instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: SE DECLARO UN ENTERO         Ocurrencia: "+oper001+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(oper001)); :}
+| DECIMAL:oper001 {: 
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE DECLARO UN DECIMAL         Ocurrencia: "+oper001+"\n" );
+instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: SE DECLARO UN DECIMAL         Ocurrencia: "+oper001+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(oper001)); :}
+| IDENTIFICADOR:id001 {: 
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE DECLARO UN IDENTIFICADOR         Ocurrencia: "+id001+"\n" );
+instruccionSintactica.add("---> Contador: "+contador+"          Ejecucion: SE DECLARO UN IDENTIFICADOR         Ocurrencia: "+id001+"\n" );
+resultadoActual = id001; :}
+| OPERACIONES_MATEMATICAS MAS ENTERO:oper002 {:  
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION SUMA         Ocurrencia: "+resultadoActual+" + "+oper002+"\n" );
+instruccionSintactica.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION SUMA         Ocurrencia: "+resultadoActual+" + "+oper002+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(resultadoActual) + Double.parseDouble(oper002)); :}
+| OPERACIONES_MATEMATICAS MAS DECIMAL:oper002 {:  
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION SUMA         Ocurrencia: "+resultadoActual+" + "+oper002+"\n" );
+instruccionSintactica.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION SUMA         Ocurrencia: "+resultadoActual+" + "+oper002+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(resultadoActual) + Double.parseDouble(oper002)); :}
+| OPERACIONES_MATEMATICAS MENOS ENTERO:oper002 {:  
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION RESTA         Ocurrencia: "+resultadoActual+" - "+oper002+"\n" );
+instruccionSintactica.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION RESTA         Ocurrencia: "+resultadoActual+" - "+oper002+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(resultadoActual) - Double.parseDouble(oper002)); :}
+| OPERACIONES_MATEMATICAS MENOS DECIMAL:oper002 {:  
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION RESTA         Ocurrencia: "+resultadoActual+" - "+oper002+"\n" );
+instruccionSintactica.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION RESTA         Ocurrencia: "+resultadoActual+" - "+oper002+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(resultadoActual) - Double.parseDouble(oper002)); :}
+| OPERACIONES_MATEMATICAS POR ENTERO:oper002 {:  
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION MULTIPLICACION         Ocurrencia: "+resultadoActual+" * "+oper002+"\n" );
+instruccionSintactica.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION MULTIPLICACION         Ocurrencia: "+resultadoActual+" * "+oper002+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(resultadoActual) * Double.parseDouble(oper002)); :}
+| OPERACIONES_MATEMATICAS POR DECIMAL:oper002 {:  
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION MULTIPLICACION         Ocurrencia: "+resultadoActual+" * "+oper002+"\n" );
+instruccionSintactica.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION MULTIPLICACION         Ocurrencia: "+resultadoActual+" * "+oper002+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(resultadoActual) * Double.parseDouble(oper002)); :}
+| OPERACIONES_MATEMATICAS DIV ENTERO:oper002 {:  
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION DIVICION         Ocurrencia: "+resultadoActual+" / "+oper002+"\n" );
+instruccionSintactica.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION DIVICION         Ocurrencia: "+resultadoActual+" / "+oper002+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(resultadoActual) / Double.parseDouble(oper002)); :}
+| OPERACIONES_MATEMATICAS DIV DECIMAL:oper002 {:  
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION DIVICION         Ocurrencia: "+resultadoActual+" / "+oper002+"\n" );
+instruccionSintactica.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION DIVICION         Ocurrencia: "+resultadoActual+" / "+oper002+"\n" );
+resultadoActual = String.valueOf(Double.parseDouble(resultadoActual) / Double.parseDouble(oper002)); :}
+| OPERACIONES_MATEMATICAS POTENCIA ENTERO:oper002 {: 
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION POTENCIA         Ocurrencia: "+resultadoActual+" ^ "+oper002+"\n" );
+instruccionSintactica.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION POTENCIA         Ocurrencia: "+resultadoActual+" ^ "+oper002+"\n" );
+resultadoActual = String.valueOf(Math.pow(Double.parseDouble(resultadoActual), Double.parseDouble(oper002))); :}
+| OPERACIONES_MATEMATICAS POTENCIA DECIMAL:oper002 {: 
+contador3++;
+contador++;
+sintacticos2.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION POTENCIA         Ocurrencia: "+resultadoActual+" ^ "+oper002+"\n" );
+instruccionSintactica.add("---> Contador: "+contador3+"          Ejecucion: SE REALIZO UNA OPERACION POTENCIA         Ocurrencia: "+resultadoActual+" ^ "+oper002+"\n" );
+resultadoActual = String.valueOf(Math.pow(Double.parseDouble(resultadoActual), Double.parseDouble(oper002))); :}
+| error {:  
+    contador2++;
+    sintacticosErrores.add("---> Contador: "+contador2+"          ERROR SINTÁCTICO en OPERACIONES MATEMÁTICAS: Se ignoró un error en una operación.\n");  
+:}
+;
